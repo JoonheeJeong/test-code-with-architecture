@@ -5,6 +5,7 @@ import com.example.demo.model.UserStatus;
 import com.example.demo.model.dto.UserCreateDto;
 import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.UserEntity;
+import com.example.demo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ class UserServiceTest {
 
     @MockBean
     private JavaMailSender mailSender;
+
+    @Autowired
+    private UserRepository userRepo;
 
     @DisplayName("getByEmail로 Active 회원 엔티티를 조회할 수 있다.")
     @Test
@@ -165,6 +169,38 @@ class UserServiceTest {
                 .build();
 
         assertThatThrownBy(() -> userService.update(2025L, dto))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("ACTIVE 회원은 login 할 수 있다.")
+    @Test
+    void login_userWithStatusACTIVE_ok() throws Exception {
+        // given
+        // when
+        userService.login(2L);
+
+        // then
+        UserEntity userEntity = userRepo.findById(2L).orElseThrow();
+        assertThat(userEntity.getLastLoginAt()).isGreaterThan(1L);
+    }
+
+    @DisplayName("PENDING 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
+    @Test
+    void login_userWithStatusPEDNING_throwsResourceNotFoundException() throws Exception {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> userService.login(1L))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("ID로 찾을 수 없는 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
+    @Test
+    void login_nonExistentUser_throwsResourceNotFoundException() throws Exception {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> userService.login(2025L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
