@@ -2,12 +2,15 @@ package com.example.demo.service;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.UserStatus;
+import com.example.demo.model.dto.UserCreateDto;
 import com.example.demo.repository.UserEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -26,6 +29,9 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @MockBean
+    private JavaMailSender mailSender;
 
     @DisplayName("getByEmail로 Active 회원 엔티티를 조회할 수 있다.")
     @Test
@@ -50,7 +56,7 @@ class UserServiceTest {
         // when
         // then
         Assertions.assertThatThrownBy(() -> userService.getByEmail("jeonggoo75@gmail.com"))
-                        .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @DisplayName("getByEmail은 해당 이메일의 회원이 없으면 예외를 발생시킨다")
@@ -97,6 +103,30 @@ class UserServiceTest {
         // then
         Assertions.assertThatThrownBy(() -> userService.getById(2323L))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("create로 회원을 생성할 수 있다")
+    @Test
+    void create_ok() throws Exception {
+        // given
+        UserCreateDto dto = UserCreateDto.builder()
+                .email("test.email@example.com")
+                .address("California")
+                .nickname("testnickname")
+                .build();
+
+        // when
+        UserEntity userEntity = userService.create(dto);
+
+        // then
+        assertThat(userEntity).isNotNull();
+        assertThat(userEntity.getId()).isEqualTo(3L);
+        assertThat(userEntity.getEmail()).isEqualTo("test.email@example.com");
+        assertThat(userEntity.getAddress()).isEqualTo("California");
+        assertThat(userEntity.getNickname()).isEqualTo("testnickname");
+        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.PENDING);
+        assertThat(userEntity.getCertificationCode()).isNotNull();
+        assertThat(userEntity.getLastLoginAt()).isNull();
     }
 
 }
