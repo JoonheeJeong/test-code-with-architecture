@@ -58,13 +58,13 @@ public class UserService {
 
     @Transactional
     public void login(long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        UserEntity userEntity = getById(id);
         userEntity.setLastLoginAt(Clock.systemUTC().millis());
     }
 
     @Transactional
     public void verifyEmail(long id, String certificationCode) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        UserEntity userEntity = getById(id);
         if (!certificationCode.equals(userEntity.getCertificationCode())) {
             throw new CertificationCodeNotMatchedException();
         }
