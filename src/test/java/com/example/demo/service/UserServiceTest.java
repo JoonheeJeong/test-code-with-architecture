@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.UserStatus;
 import com.example.demo.model.dto.UserCreateDto;
+import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.UserEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @SqlGroup({
@@ -125,8 +127,45 @@ class UserServiceTest {
         assertThat(userEntity.getAddress()).isEqualTo("California");
         assertThat(userEntity.getNickname()).isEqualTo("testnickname");
         assertThat(userEntity.getStatus()).isEqualTo(UserStatus.PENDING);
-        assertThat(userEntity.getCertificationCode()).isNotNull();
+        assertThat(userEntity.getCertificationCode()).isNotNull(); // TODO: 직접검증
         assertThat(userEntity.getLastLoginAt()).isNull();
+    }
+
+    @DisplayName("update로 ACTIVE 회원을 수정할 수 있다")
+    @Test
+    void update_ok() {
+        UserUpdateDto dto = UserUpdateDto.builder()
+                .nickname("joonhee")
+                .address("Daejeon Doan")
+                .build();
+        UserEntity updatedUser = userService.update(2L, dto);
+        assertThat(updatedUser.getId()).isEqualTo(2L);
+        assertThat(updatedUser.getNickname()).isEqualTo("joonhee");
+        assertThat(updatedUser.getAddress()).isEqualTo("Daejeon Doan");
+    }
+
+    @DisplayName("update로 PENDING 회원을 수정하면 ResourceNotFoundException이 발생한다")
+    @Test
+    void updatePendingUser_throwsResourceNotFoundException() throws Exception {
+        UserUpdateDto dto = UserUpdateDto.builder()
+                .nickname("joonhee")
+                .address("Daejeon Doan")
+                .build();
+
+        assertThatThrownBy(() -> userService.update(1L, dto))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("update로 ID가 없는 회원을 수정하려고 하면 ResourceNotFoundException이 발생한다")
+    @Test
+    void updateNonexistentUser_throwsResourceNotFoundException() throws Exception {
+        UserUpdateDto dto = UserUpdateDto.builder()
+                .nickname("joonhee")
+                .address("Daejeon Doan")
+                .build();
+
+        assertThatThrownBy(() -> userService.update(2025L, dto))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 
 }
