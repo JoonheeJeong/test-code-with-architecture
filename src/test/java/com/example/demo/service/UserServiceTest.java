@@ -39,12 +39,12 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepo;
 
-    @DisplayName("getByEmail로 Active 회원 엔티티를 조회할 수 있다.")
+    @DisplayName("getActiveByEmail로 ACTIVE 회원 엔티티를 조회할 수 있다.")
     @Test
-    void getByEmail_ok() throws Exception {
+    void getActiveByEmail_ok() throws Exception {
         // given
         // when
-        UserEntity byEmail = userService.getByEmail("ownsider@naver.com");
+        UserEntity byEmail = userService.getActiveByEmail("ownsider@naver.com");
 
         // then
         assertThat(byEmail).isNotNull();
@@ -55,32 +55,32 @@ class UserServiceTest {
         assertThat(byEmail.getLastLoginAt()).isEqualTo(1);
     }
 
-    @DisplayName("getByEmail은 PENDING 회원 조회는 예외를 발생시킨다")
+    @DisplayName("getActiveByEmail은 PENDING 회원 조회는 예외를 발생시킨다")
     @Test
-    void getByEmail_failWithPending_throwsResourceNotFoundException() throws Exception {
+    void getActiveByEmail_failWithPending_throwsResourceNotFoundException() throws Exception {
         // given
         // when
         // then
-        Assertions.assertThatThrownBy(() -> userService.getByEmail("jeonggoo75@gmail.com"))
+        Assertions.assertThatThrownBy(() -> userService.getActiveByEmail("jeonggoo75@gmail.com"))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("getByEmail은 해당 이메일의 회원이 없으면 예외를 발생시킨다")
+    @DisplayName("getActiveByEmail은 해당 이메일의 회원이 없으면 예외를 발생시킨다")
     @Test
-    void getByEmail_failWithNonexistentEmail_throwsResourceNotFoundException() throws Exception {
+    void getActiveByEmail_failWithNonexistentEmail_throwsResourceNotFoundException() throws Exception {
         // given
         // when
         // then
-        Assertions.assertThatThrownBy(() -> userService.getByEmail("jeonggoo76@gmail.com"))
+        Assertions.assertThatThrownBy(() -> userService.getActiveByEmail("jeonggoo76@gmail.com"))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("getById로 Active 회원 엔티티를 조회할 수 있다.")
+    @DisplayName("getActiveById로 ACTIVE 회원 엔티티를 조회할 수 있다.")
     @Test
-    void getById_ok() throws Exception {
+    void getActiveById_ok() throws Exception {
         // given
         // when
-        UserEntity byEmail = userService.getById(2L);
+        UserEntity byEmail = userService.getActiveById(2L);
 
         // then
         assertThat(byEmail).isNotNull();
@@ -91,23 +91,23 @@ class UserServiceTest {
         assertThat(byEmail.getLastLoginAt()).isEqualTo(1);
     }
 
-    @DisplayName("getById는 PENDING 회원 조회는 예외를 발생시킨다")
+    @DisplayName("getActiveById는 PENDING 회원 조회는 예외를 발생시킨다")
     @Test
-    void getById_failWithPending_throwsResourceNotFoundException() throws Exception {
+    void getActiveById_failWithPending_throwsResourceNotFoundException() throws Exception {
         // given
         // when
         // then
-        Assertions.assertThatThrownBy(() -> userService.getById(1L))
+        Assertions.assertThatThrownBy(() -> userService.getActiveById(1L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("getById는 해당 id의 회원이 없으면 예외를 발생시킨다")
+    @DisplayName("getActiveById는 해당 id의 회원이 없으면 예외를 발생시킨다")
     @Test
-    void getById_failWithNonexistentId_throwsResourceNotFoundException() throws Exception {
+    void getActiveById_failWithNonexistentId_throwsResourceNotFoundException() throws Exception {
         // given
         // when
         // then
-        Assertions.assertThatThrownBy(() -> userService.getById(2323L))
+        Assertions.assertThatThrownBy(() -> userService.getActiveById(2323L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -148,19 +148,7 @@ class UserServiceTest {
         assertThat(updatedUser.getAddress()).isEqualTo("Daejeon Doan");
     }
 
-    @DisplayName("update로 PENDING 회원을 수정하면 ResourceNotFoundException이 발생한다")
-    @Test
-    void updatePendingUser_throwsResourceNotFoundException() throws Exception {
-        UserUpdateDto dto = UserUpdateDto.builder()
-                .nickname("joonhee")
-                .address("Daejeon Doan")
-                .build();
-
-        assertThatThrownBy(() -> userService.update(1L, dto))
-                .isInstanceOf(ResourceNotFoundException.class);
-    }
-
-    @DisplayName("update로 ID가 없는 회원을 수정하려고 하면 ResourceNotFoundException이 발생한다")
+    @DisplayName("update로 id가 없는 회원을 수정하려고 하면 ResourceNotFoundException이 발생한다")
     @Test
     void updateNonexistentUser_throwsResourceNotFoundException() throws Exception {
         UserUpdateDto dto = UserUpdateDto.builder()
@@ -172,7 +160,7 @@ class UserServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("ACTIVE 회원은 login 할 수 있다.")
+    @DisplayName("존재하는 회원은 login 할 수 있다.")
     @Test
     void login_userWithStatusACTIVE_ok() throws Exception {
         // given
@@ -184,17 +172,7 @@ class UserServiceTest {
         assertThat(userEntity.getLastLoginAt()).isGreaterThan(1L);
     }
 
-    @DisplayName("PENDING 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
-    @Test
-    void login_userWithStatusPEDNING_throwsResourceNotFoundException() throws Exception {
-        // given
-        // when
-        // then
-        assertThatThrownBy(() -> userService.login(1L))
-                .isInstanceOf(ResourceNotFoundException.class);
-    }
-
-    @DisplayName("ID로 찾을 수 없는 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
+    @DisplayName("id로 찾을 수 없는 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
     @Test
     void login_nonExistentUser_throwsResourceNotFoundException() throws Exception {
         // given

@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
         return ResponseEntity
             .ok()
-            .body(toResponse(userService.getById(id)));
+            .body(toResponse(userService.getActiveById(id)));
     }
 
     @GetMapping("/{id}/verify")
@@ -53,7 +53,7 @@ public class UserController {
         @Parameter(name = "EMAIL", in = ParameterIn.HEADER)
         @RequestHeader("EMAIL") String email // 일반적으로 스프링 시큐리티를 사용한다면 UserPrincipal 에서 가져옵니다.
     ) {
-        UserEntity userEntity = userService.getByEmail(email);
+        UserEntity userEntity = userService.getActiveByEmail(email);
         userService.login(userEntity.getId());
         return ResponseEntity
             .ok()
@@ -67,7 +67,7 @@ public class UserController {
         @RequestHeader("EMAIL") String email, // 일반적으로 스프링 시큐리티를 사용한다면 UserPrincipal 에서 가져옵니다.
         @RequestBody UserUpdateDto userUpdateDto
     ) {
-        UserEntity userEntity = userService.getByEmail(email);
+        UserEntity userEntity = userService.getActiveByEmail(email);
         userEntity = userService.update(userEntity.getId(), userUpdateDto);
         return ResponseEntity
             .ok()

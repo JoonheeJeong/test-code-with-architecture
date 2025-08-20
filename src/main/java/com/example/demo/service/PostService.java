@@ -23,7 +23,7 @@ public class PostService {
     }
 
     public PostEntity create(PostCreateDto postCreateDto) {
-        UserEntity userEntity = userService.getById(postCreateDto.getWriterId());
+        UserEntity userEntity = userService.getActiveById(postCreateDto.getWriterId());
         PostEntity postEntity = new PostEntity();
         postEntity.setWriter(userEntity);
         postEntity.setContent(postCreateDto.getContent());
