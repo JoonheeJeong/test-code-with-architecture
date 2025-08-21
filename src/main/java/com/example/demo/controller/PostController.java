@@ -24,14 +24,14 @@ public class PostController {
     private final UserController userController;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable long id) {
+    public ResponseEntity<PostResponse> getById(@PathVariable long id) {
         return ResponseEntity
             .ok()
             .body(toResponse(postService.getById(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponse> updatePost(@PathVariable long id, @RequestBody PostUpdateDto postUpdateDto) {
+    public ResponseEntity<PostResponse> update(@PathVariable long id, @RequestBody PostUpdateDto postUpdateDto) {
         return ResponseEntity
             .ok()
             .body(toResponse(postService.update(id, postUpdateDto)));
