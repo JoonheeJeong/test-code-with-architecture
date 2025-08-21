@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.CertificationCodeNotMatchedException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.UserStatus;
 import com.example.demo.model.dto.UserCreateDto;
@@ -169,7 +170,7 @@ class UserServiceTest {
 
         // then
         UserEntity userEntity = userRepo.findById(2L).orElseThrow();
-        assertThat(userEntity.getLastLoginAt()).isGreaterThan(1L);
+        assertThat(userEntity.getLastLoginAt()).isGreaterThan(1L); // TODO: 정확한 시간
     }
 
     @DisplayName("id로 찾을 수 없는 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
@@ -180,6 +181,28 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.login(2025L))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("verifyEmail로 회원을 ACTIVE 상태로 변경할 수 있다")
+    @Test
+    void verifyEmail_makesUserACTIVE() throws Exception {
+        // given
+        // when
+        userService.verifyEmail(1L, "b84b2142-a620-4f95-b317-40f69c64fec8");
+
+        // then
+        UserEntity userEntity = userRepo.findById(1L).orElseThrow();
+        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
+    }
+
+    @DisplayName("certificationCode 가 일치하지 않으면 verifyEmail 은 CertificationCodeNotMatchedException 예외를 발생시킨다 ")
+    @Test
+    void verifyEmail_withWrongCertificationCode_throwsCertificationCodeNotMatchedException() throws Exception {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> userService.verifyEmail(1L, "b84b2142-a620-4f95-b317-40f69c64fec0"))
+                .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 
 }
