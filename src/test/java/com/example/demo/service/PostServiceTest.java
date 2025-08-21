@@ -1,6 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.UserStatus;
+import com.example.demo.model.dto.PostCreateDto;
+import com.example.demo.model.dto.PostUpdateDto;
+import com.example.demo.model.dto.UserCreateDto;
+import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.PostEntity;
 import com.example.demo.repository.UserEntity;
 import com.example.demo.repository.UserRepository;
@@ -63,4 +68,26 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.getById(2L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
+
+    @DisplayName("create로 게시물을 생성할 수 있다")
+    @Test
+    void create_ok() throws Exception {
+        // given
+        PostCreateDto dto = PostCreateDto.builder()
+                .content("content입니당")
+                .writerId(2L)
+                .build();
+
+        // when
+        PostEntity postEntity = postService.create(dto);
+
+        // then
+        assertThat(postEntity).isNotNull();
+        assertThat(postEntity.getId()).isEqualTo(2L);
+        assertThat(postEntity.getContent()).isEqualTo("content입니당");
+        assertThat(postEntity.getCreatedAt()).isNotNull(); // TODO: 직접적인 값 검증 가능하도록 개선 필요
+        assertThat(postEntity.getModifiedAt()).isNull();
+        assertThat(postEntity.getWriter().getEmail()).isEqualTo("ownsider@naver.com");
+    }
+
 }
