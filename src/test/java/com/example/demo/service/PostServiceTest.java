@@ -1,11 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.UserStatus;
 import com.example.demo.model.dto.PostCreateDto;
 import com.example.demo.model.dto.PostUpdateDto;
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.PostEntity;
 import com.example.demo.repository.UserEntity;
 import com.example.demo.repository.UserRepository;
@@ -88,6 +85,23 @@ class PostServiceTest {
         assertThat(postEntity.getCreatedAt()).isNotNull(); // TODO: 직접적인 값 검증 가능하도록 개선 필요
         assertThat(postEntity.getModifiedAt()).isNull();
         assertThat(postEntity.getWriter().getEmail()).isEqualTo("ownsider@naver.com");
+    }
+
+    @DisplayName("update로 게시물을 수정할 수 있다")
+    @Test
+    void update_ok() {
+        // given
+        PostUpdateDto dto = PostUpdateDto.builder()
+                .content("modified content")
+                .build();
+
+        // when
+        PostEntity postEntity = postService.update(1L, dto);
+
+        assertThat(postEntity).isNotNull();
+        assertThat(postEntity.getId()).isEqualTo(1L);
+        assertThat(postEntity.getContent()).isEqualTo("modified content");
+        assertThat(postEntity.getModifiedAt()).isNotNull(); // TODO: 직접적인 값 검증 가능하도록 개선 필요
     }
 
 }
