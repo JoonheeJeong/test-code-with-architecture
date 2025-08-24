@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.dto.PostUpdateDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -29,6 +32,9 @@ class PostControllerTest {
 
     @MockBean
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @DisplayName("GET /api/posts/{id} 로 게시물을 조회할 수 있다")
     @Test
@@ -57,6 +63,50 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/{id}", id))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Posts에서 ID %d를 찾을 수 없습니다.".formatted(id)))
+        ;
+    }
+
+    @DisplayName("PUT /api/posts/{id} 요청으로 게시물을 수정할 수 있다")
+    @Test
+    void update_ok() throws Exception {
+        // given
+        long postId = 1L;
+        PostUpdateDto dto = PostUpdateDto.builder()
+                .content("내용 수정 테스트")
+                .build();
+        String requestBody = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/%d".formatted(postId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.content").value(dto.getContent()))
+                .andExpect(jsonPath("$.createdAt").value(1755812460000L))
+                .andExpect(jsonPath("$.modifiedAt").exists()) // TODO: 정확히 일치하려면?
+                .andExpect(jsonPath("$.writer.id").value(2))
+                .andExpect(jsonPath("$.writer.email").value("ownsider@naver.com"))
+                .andExpect(jsonPath("$.writer.nickname").value("ownsider"))
+                .andExpect(jsonPath("$.writer.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.writer.lastLoginAt").value(1))
+        ;
+    }
+
+    @DisplayName("PUT /api/posts/{id} 요청은 id 해당 게시물이 없으면 404 Not Found")
+    @Test
+    void update_nonexistentId_404NotFound() throws Exception {
+        // given
+        long postId = 3L;
+        PostUpdateDto dto = PostUpdateDto.builder()
+                .content("내용 수정 테스트")
+                .build();
+        String requestBody = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/%d".formatted(postId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Posts에서 ID %d를 찾을 수 없습니다.".formatted(postId)))
         ;
     }
 
