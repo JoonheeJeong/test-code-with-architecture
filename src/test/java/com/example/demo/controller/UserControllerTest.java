@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.dto.UserUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -144,6 +146,81 @@ class UserControllerTest {
     void getMyInfo_noHeaderEMALE_badRequest() throws Exception {
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/me"))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    @DisplayName("PUT /api/users/me 요청 성공시 Ok, MyProfileResponse 응답")
+    @Test
+    void updateMyInfo_okWithMyProfileResponse() throws Exception {
+        // given
+        String email = "ownsider@naver.com";
+        UserUpdateDto dto = UserUpdateDto.builder()
+                .address("LA")
+                .nickname("hello")
+                .build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/me")
+                        .header("EMAIL", email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.email").value(email))
+                .andExpect(jsonPath("$.nickname").value(dto.getNickname()))
+                .andExpect(jsonPath("$.address").value(dto.getAddress()))
+                .andExpect(jsonPath("$.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.lastLoginAt").exists()) // TODO: 정확하게 가능?
+        ;
+    }
+
+    @DisplayName("PUT /api/users/me 요청시 회원 status ACTIVE 아니면 Not Found 응답")
+    @Test
+    void updateMyInfo_nonActiveUser_notFound() throws Exception {
+        // given
+        String email = "jeonggoo75@gmail.com";
+        UserUpdateDto dto = UserUpdateDto.builder()
+                .address("LA")
+                .nickname("hello")
+                .build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/me")
+                        .header("EMAIL", email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Users에서 ID %s를 찾을 수 없습니다.".formatted(email)))
+        ;
+    }
+
+    @DisplayName("PUT /api/users/me 요청시 EMAIL 헤더 없으면 Bad Request")
+    @Test
+    void updateMyInfo_noHeaderEMALE_badRequest() throws Exception {
+        // given
+        UserUpdateDto dto = UserUpdateDto.builder()
+                .address("LA")
+                .nickname("hello")
+                .build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/me")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    @DisplayName("PUT /api/users/me 요청시 body 없으면 Bad Request")
+    @Test
+    void updateMyInfo_noBody_badRequest() throws Exception {
+        // given
+        String email = "ownsider@naver.com";
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/me")
+                        .header("EMAIL", email))
                 .andExpect(status().isBadRequest())
         ;
     }
