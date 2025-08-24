@@ -106,4 +106,46 @@ class UserControllerTest {
         ;
     }
 
+    @DisplayName("GET /api/users/me 요청 성공시 Ok, MyProfileResponse 응답")
+    @Test
+    void getMyInfo_okWithMyProfileResponse() throws Exception {
+        // given
+        String email = "ownsider@naver.com";
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/me")
+                        .header("EMAIL", email))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.email").value(email))
+                .andExpect(jsonPath("$.nickname").value("ownsider"))
+                .andExpect(jsonPath("$.address").value("Hanam"))
+                .andExpect(jsonPath("$.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.lastLoginAt").exists()) // TODO: 정확하게 가능?
+        ;
+    }
+
+    @DisplayName("GET /api/users/me 요청시 회원 status ACTIVE 아니면 Not Found 응답")
+    @Test
+    void getMyInfo_nonActiveUser_notFound() throws Exception {
+        // given
+        String email = "jeonggoo75@gmail.com";
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/me")
+                        .header("EMAIL", email))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Users에서 ID %s를 찾을 수 없습니다.".formatted(email)))
+        ;
+    }
+
+    @DisplayName("GET /api/users/me 요청 성공시 EMAIL 헤더 없으면 Bad Request")
+    @Test
+    void getMyInfo_noHeaderEMALE_badRequest() throws Exception {
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/me"))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
 }
