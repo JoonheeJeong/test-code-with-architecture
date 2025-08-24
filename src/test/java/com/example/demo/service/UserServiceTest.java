@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.CertificationCodeNotMatchedException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.UserStatus;
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
-import com.example.demo.repository.UserEntity;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.domain.UserCreate;
+import com.example.demo.user.domain.UserUpdate;
+import com.example.demo.user.infrastructure.UserEntity;
+import com.example.demo.user.infrastructure.UserRepository;
+import com.example.demo.user.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -116,7 +117,7 @@ class UserServiceTest {
     @Test
     void create_ok() throws Exception {
         // given
-        UserCreateDto dto = UserCreateDto.builder()
+        UserCreate dto = UserCreate.builder()
                 .email("test.email@example.com")
                 .address("California")
                 .nickname("testnickname")
@@ -139,7 +140,7 @@ class UserServiceTest {
     @DisplayName("update로 ACTIVE 회원을 수정할 수 있다")
     @Test
     void update_ok() {
-        UserUpdateDto dto = UserUpdateDto.builder()
+        UserUpdate dto = UserUpdate.builder()
                 .nickname("joonhee")
                 .address("Daejeon Doan")
                 .build();
@@ -152,7 +153,7 @@ class UserServiceTest {
     @DisplayName("update로 id가 없는 회원을 수정하려고 하면 ResourceNotFoundException이 발생한다")
     @Test
     void updateNonexistentUser_throwsResourceNotFoundException() throws Exception {
-        UserUpdateDto dto = UserUpdateDto.builder()
+        UserUpdate dto = UserUpdate.builder()
                 .nickname("joonhee")
                 .address("Daejeon Doan")
                 .build();

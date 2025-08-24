@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.dto.PostCreateDto;
+import com.example.demo.post.domain.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +40,7 @@ class PostCreateControllerTest {
     @DisplayName("POST /api/posts 요청으로 게시물을 생성할 수 있다")
     @Test
     void create_ok() throws Exception {
-        PostCreateDto dto = PostCreateDto.builder()
+        PostCreate dto = PostCreate.builder()
                 .content("내용 테스트")
                 .writerId(2L)
                 .build();
@@ -65,7 +65,7 @@ class PostCreateControllerTest {
     @DisplayName("POST /api/posts 요청으로 게시물을 생성시 회원이 없으면 404 Not Found")
     @Test
     void create_unknownUser_404notFound() throws Exception {
-        PostCreateDto dto = PostCreateDto.builder()
+        PostCreate dto = PostCreate.builder()
                 .content("내용 테스트")
                 .writerId(3L)
                 .build();

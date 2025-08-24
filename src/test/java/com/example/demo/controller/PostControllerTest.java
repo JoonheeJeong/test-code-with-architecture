@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.dto.PostUpdateDto;
+import com.example.demo.post.domain.PostUpdate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,7 +71,7 @@ class PostControllerTest {
     void update_ok() throws Exception {
         // given
         long postId = 1L;
-        PostUpdateDto dto = PostUpdateDto.builder()
+        PostUpdate dto = PostUpdate.builder()
                 .content("내용 수정 테스트")
                 .build();
         String requestBody = objectMapper.writeValueAsString(dto);
@@ -97,7 +97,7 @@ class PostControllerTest {
     void update_nonexistentId_404NotFound() throws Exception {
         // given
         long postId = 3L;
-        PostUpdateDto dto = PostUpdateDto.builder()
+        PostUpdate dto = PostUpdate.builder()
                 .content("내용 수정 테스트")
                 .build();
         String requestBody = objectMapper.writeValueAsString(dto);

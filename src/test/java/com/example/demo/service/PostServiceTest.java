@@ -1,11 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.dto.PostCreateDto;
-import com.example.demo.model.dto.PostUpdateDto;
-import com.example.demo.repository.PostEntity;
-import com.example.demo.repository.UserEntity;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.post.domain.PostCreate;
+import com.example.demo.post.domain.PostUpdate;
+import com.example.demo.post.infrastructure.PostEntity;
+import com.example.demo.post.service.PostService;
+import com.example.demo.user.infrastructure.UserEntity;
+import com.example.demo.user.infrastructure.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @SqlGroup({
-        @Sql(scripts = {"classpath:sql/test-post-service-init.sql"}, executionPhase =
-                Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(scripts = {"classpath:sql/test-post-service-init.sql"},
+                executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(scripts = {"classpath:sql/test-post-service-end.sql"},
                 executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
@@ -70,7 +71,7 @@ class PostServiceTest {
     @Test
     void create_ok() throws Exception {
         // given
-        PostCreateDto dto = PostCreateDto.builder()
+        PostCreate dto = PostCreate.builder()
                 .content("content입니당")
                 .writerId(2L)
                 .build();
@@ -91,7 +92,7 @@ class PostServiceTest {
     @Test
     void update_ok() {
         // given
-        PostUpdateDto dto = PostUpdateDto.builder()
+        PostUpdate dto = PostUpdate.builder()
                 .content("modified content")
                 .build();
 

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.dto.UserCreateDto;
+import com.example.demo.user.domain.UserCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +42,7 @@ class UserCreateControllerTest {
     @Test
     void create_createdWithUserResponse() throws Exception {
         // given
-        UserCreateDto dto = UserCreateDto.builder()
+        UserCreate dto = UserCreate.builder()
                 .email("test.email@example.com")
                 .nickname("test")
                 .address("Seoul")

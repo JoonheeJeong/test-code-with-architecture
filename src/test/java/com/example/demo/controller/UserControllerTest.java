@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.dto.UserUpdateDto;
+import com.example.demo.user.domain.UserUpdate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -155,7 +155,7 @@ class UserControllerTest {
     void updateMyInfo_okWithMyProfileResponse() throws Exception {
         // given
         String email = "ownsider@naver.com";
-        UserUpdateDto dto = UserUpdateDto.builder()
+        UserUpdate dto = UserUpdate.builder()
                 .address("LA")
                 .nickname("hello")
                 .build();
@@ -180,7 +180,7 @@ class UserControllerTest {
     void updateMyInfo_nonActiveUser_notFound() throws Exception {
         // given
         String email = "jeonggoo75@gmail.com";
-        UserUpdateDto dto = UserUpdateDto.builder()
+        UserUpdate dto = UserUpdate.builder()
                 .address("LA")
                 .nickname("hello")
                 .build();
@@ -199,7 +199,7 @@ class UserControllerTest {
     @Test
     void updateMyInfo_noHeaderEMALE_badRequest() throws Exception {
         // given
-        UserUpdateDto dto = UserUpdateDto.builder()
+        UserUpdate dto = UserUpdate.builder()
                 .address("LA")
                 .nickname("hello")
                 .build();
