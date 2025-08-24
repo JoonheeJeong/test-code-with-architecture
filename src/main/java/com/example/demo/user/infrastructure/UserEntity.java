@@ -1,21 +1,17 @@
 package com.example.demo.user.infrastructure;
 
+import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
 
     @Id
@@ -40,4 +36,41 @@ public class UserEntity {
 
     @Column(name = "last_login_at")
     private Long lastLoginAt;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public UserEntity(Long id, String email, String nickname, String address, String certificationCode,
+                      UserStatus status, Long lastLoginAt) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.address = address;
+        this.certificationCode = certificationCode;
+        this.status = status;
+        this.lastLoginAt = lastLoginAt;
+    }
+
+    public static UserEntity from(User user) {
+        return builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .address(user.getAddress())
+                .certificationCode(user.getCertificationCode())
+                .status(user.getStatus())
+                .lastLoginAt(user.getLastLoginAt())
+                .build();
+    }
+
+    public User toModel() {
+        return User.builder()
+                .id(id)
+                .email(this.email)
+                .nickname(this.nickname)
+                .address(this.address)
+                .certificationCode(this.certificationCode)
+                .status(this.status)
+                .lastLoginAt(this.lastLoginAt)
+                .build();
+    }
+
 }

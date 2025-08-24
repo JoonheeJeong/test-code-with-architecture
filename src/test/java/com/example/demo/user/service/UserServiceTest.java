@@ -1,13 +1,12 @@
-package com.example.demo.service;
+package com.example.demo.user.service;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
-import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
+import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
-import com.example.demo.user.infrastructure.UserEntity;
-import com.example.demo.user.infrastructure.UserRepository;
-import com.example.demo.user.service.UserService;
+import com.example.demo.user.service.port.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,15 +45,15 @@ class UserServiceTest {
     void getActiveByEmail_ok() throws Exception {
         // given
         // when
-        UserEntity byEmail = userService.getActiveByEmail("ownsider@naver.com");
+        User user = userService.getActiveByEmail("ownsider@naver.com");
 
         // then
-        assertThat(byEmail).isNotNull();
-        assertThat(byEmail.getEmail()).isEqualTo("ownsider@naver.com");
-        assertThat(byEmail.getNickname()).isEqualTo("ownsider");
-        assertThat(byEmail.getAddress()).isEqualTo("Hanam");
-        assertThat(byEmail.getStatus()).isEqualTo(UserStatus.ACTIVE);
-        assertThat(byEmail.getLastLoginAt()).isEqualTo(1);
+        assertThat(user).isNotNull();
+        assertThat(user.getEmail()).isEqualTo("ownsider@naver.com");
+        assertThat(user.getNickname()).isEqualTo("ownsider");
+        assertThat(user.getAddress()).isEqualTo("Hanam");
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
+        assertThat(user.getLastLoginAt()).isEqualTo(1);
     }
 
     @DisplayName("getActiveByEmail은 PENDING 회원 조회는 예외를 발생시킨다")
@@ -82,15 +81,15 @@ class UserServiceTest {
     void getActiveById_ok() throws Exception {
         // given
         // when
-        UserEntity byEmail = userService.getActiveById(2L);
+        User user = userService.getActiveById(2L);
 
         // then
-        assertThat(byEmail).isNotNull();
-        assertThat(byEmail.getEmail()).isEqualTo("ownsider@naver.com");
-        assertThat(byEmail.getNickname()).isEqualTo("ownsider");
-        assertThat(byEmail.getAddress()).isEqualTo("Hanam");
-        assertThat(byEmail.getStatus()).isEqualTo(UserStatus.ACTIVE);
-        assertThat(byEmail.getLastLoginAt()).isEqualTo(1);
+        assertThat(user).isNotNull();
+        assertThat(user.getEmail()).isEqualTo("ownsider@naver.com");
+        assertThat(user.getNickname()).isEqualTo("ownsider");
+        assertThat(user.getAddress()).isEqualTo("Hanam");
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
+        assertThat(user.getLastLoginAt()).isEqualTo(1);
     }
 
     @DisplayName("getActiveById는 PENDING 회원 조회는 예외를 발생시킨다")
@@ -124,17 +123,17 @@ class UserServiceTest {
                 .build();
 
         // when
-        UserEntity userEntity = userService.create(dto);
+        User user = userService.create(dto);
 
         // then
-        assertThat(userEntity).isNotNull();
-        assertThat(userEntity.getId()).isEqualTo(3L);
-        assertThat(userEntity.getEmail()).isEqualTo("test.email@example.com");
-        assertThat(userEntity.getAddress()).isEqualTo("California");
-        assertThat(userEntity.getNickname()).isEqualTo("testnickname");
-        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.PENDING);
-        assertThat(userEntity.getCertificationCode()).isNotNull(); // TODO: 직접검증
-        assertThat(userEntity.getLastLoginAt()).isNull();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(3L);
+        assertThat(user.getEmail()).isEqualTo("test.email@example.com");
+        assertThat(user.getAddress()).isEqualTo("California");
+        assertThat(user.getNickname()).isEqualTo("testnickname");
+        assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
+        assertThat(user.getCertificationCode()).isNotNull(); // TODO: 직접검증
+        assertThat(user.getLastLoginAt()).isNull();
     }
 
     @DisplayName("update로 ACTIVE 회원을 수정할 수 있다")
@@ -144,10 +143,10 @@ class UserServiceTest {
                 .nickname("joonhee")
                 .address("Daejeon Doan")
                 .build();
-        UserEntity updatedUser = userService.update(2L, dto);
-        assertThat(updatedUser.getId()).isEqualTo(2L);
-        assertThat(updatedUser.getNickname()).isEqualTo("joonhee");
-        assertThat(updatedUser.getAddress()).isEqualTo("Daejeon Doan");
+        User user = userService.update(2L, dto);
+        assertThat(user.getId()).isEqualTo(2L);
+        assertThat(user.getNickname()).isEqualTo("joonhee");
+        assertThat(user.getAddress()).isEqualTo("Daejeon Doan");
     }
 
     @DisplayName("update로 id가 없는 회원을 수정하려고 하면 ResourceNotFoundException이 발생한다")
@@ -170,8 +169,8 @@ class UserServiceTest {
         userService.login(2L);
 
         // then
-        UserEntity userEntity = userRepo.findById(2L).orElseThrow();
-        assertThat(userEntity.getLastLoginAt()).isGreaterThan(1L); // TODO: 정확한 시간
+        User user = userRepo.findById(2L).orElseThrow();
+        assertThat(user.getLastLoginAt()).isGreaterThan(1L); // TODO: 정확한 시간
     }
 
     @DisplayName("id로 찾을 수 없는 회원은 login 시도하면 ResourceNotFoundException이 발생한다")
@@ -192,8 +191,8 @@ class UserServiceTest {
         userService.verifyEmail(1L, "b84b2142-a620-4f95-b317-40f69c64fec8");
 
         // then
-        UserEntity userEntity = userRepo.findById(1L).orElseThrow();
-        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
+        User user = userRepo.findById(1L).orElseThrow();
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
     @DisplayName("certificationCode 가 일치하지 않으면 verifyEmail 은 CertificationCodeNotMatchedException 예외를 발생시킨다 ")

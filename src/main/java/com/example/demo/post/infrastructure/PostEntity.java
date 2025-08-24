@@ -1,19 +1,15 @@
 package com.example.demo.post.infrastructure;
 
+import com.example.demo.post.domain.Post;
 import com.example.demo.user.infrastructure.UserEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "posts")
 public class PostEntity {
@@ -35,4 +31,32 @@ public class PostEntity {
     @JoinColumn(name = "user_id")
     private UserEntity writer;
 
+    @Builder(access = AccessLevel.PRIVATE)
+    public PostEntity(Long id, String content, Long createdAt, Long modifiedAt, UserEntity writer) {
+        this.id = id;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.writer = writer;
+    }
+
+    public static PostEntity from(Post post) {
+        return PostEntity.builder()
+                .id(post.getId())
+                .content(post.getContent())
+                .createdAt(post.getCreatedAt())
+                .modifiedAt(post.getModifiedAt())
+                .writer(UserEntity.from(post.getWriter()))
+                .build();
+    }
+
+    public Post toModel() {
+        return Post.builder()
+                .id(this.id)
+                .content(this.content)
+                .createdAt(this.createdAt)
+                .modifiedAt(this.modifiedAt)
+                .writer(getWriter().toModel())
+                .build();
+    }
 }

@@ -11,7 +11,8 @@ public class PostUpdate {
 
     @Builder
     public PostUpdate(
-        @JsonProperty("content") String content) {
+            @JsonProperty("content") String content) {
         this.content = content;
     }
+
 }
