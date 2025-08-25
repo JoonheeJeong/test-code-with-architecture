@@ -9,8 +9,8 @@ import java.util.UUID;
 
 @Getter
 public class User {
-    private Long id;
-    private String email;
+    private final Long id;
+    private final String email;
     private String nickname;
     private String address;
     private String certificationCode;

@@ -8,11 +8,11 @@ import java.time.Clock;
 
 @Getter
 public class Post {
-    private Long id;
+    private final Long id;
     private String content;
-    private Long createdAt;
+    private final Long createdAt;
     private Long modifiedAt;
-    private User writer;
+    private final User writer;
 
     @Builder
     public Post(Long id, String content, Long createdAt, Long modifiedAt, User writer) {
