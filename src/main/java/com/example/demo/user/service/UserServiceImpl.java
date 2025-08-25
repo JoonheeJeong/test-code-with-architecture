@@ -7,8 +7,6 @@ import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
 import com.example.demo.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
+    private final CertificationService certificationService;
 
     @Transactional(readOnly = true)
     public User getById(long id) {
@@ -41,8 +39,7 @@ public class UserServiceImpl implements UserService {
     public User create(UserCreate userCreate) {
         User user = User.from(userCreate);
         user = userRepository.save(user);
-        String certificationUrl = generateCertificationUrl(user);
-        sendCertificationEmail(userCreate.getEmail(), certificationUrl);
+        certificationService.send(user.getId(), user.getCertificationCode(), user.getEmail());
         return user;
     }
 
@@ -68,15 +65,4 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private void sendCertificationEmail(String email, String certificationUrl) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Please certify your email address");
-        message.setText("Please click the following link to certify your email address: " + certificationUrl);
-        mailSender.send(message);
-    }
-
-    private String generateCertificationUrl(User user) {
-        return "http://localhost:8080/api/users/" + user.getId() + "/verify?certificationCode=" + user.getCertificationCode();
-    }
 }
