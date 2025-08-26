@@ -2,11 +2,12 @@ package com.example.demo.user.controller.response;
 
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UserResponseTest {
 
@@ -28,11 +29,11 @@ class UserResponseTest {
         UserResponse userResponse = UserResponse.from(user);
 
         // then
-        Assertions.assertThat(userResponse.id()).isEqualTo(user.getId());
-        Assertions.assertThat(userResponse.email()).isEqualTo(user.getEmail());
-        Assertions.assertThat(userResponse.nickname()).isEqualTo(user.getNickname());
-        Assertions.assertThat(userResponse.status()).isEqualTo(user.getStatus());
-        Assertions.assertThat(userResponse.lastLoginAt()).isEqualTo(user.getLastLoginAt());
+        assertThat(userResponse.id()).isEqualTo(user.getId());
+        assertThat(userResponse.email()).isEqualTo(user.getEmail());
+        assertThat(userResponse.nickname()).isEqualTo(user.getNickname());
+        assertThat(userResponse.status()).isEqualTo(user.getStatus());
+        assertThat(userResponse.lastLoginAt()).isEqualTo(user.getLastLoginAt());
     }
 
 }

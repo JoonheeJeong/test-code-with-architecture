@@ -3,11 +3,12 @@ package com.example.demo.post.controller.response;
 import com.example.demo.post.domain.Post;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PostResponseTest {
 
@@ -37,14 +38,14 @@ class PostResponseTest {
         PostResponse postResponse = PostResponse.from(post);
 
         // then
-        Assertions.assertThat(postResponse.id()).isEqualTo(post.getId());
-        Assertions.assertThat(postResponse.content()).isEqualTo(post.getContent());
-        Assertions.assertThat(postResponse.createdAt()).isEqualTo(post.getCreatedAt());
-        Assertions.assertThat(postResponse.modifiedAt()).isEqualTo(post.getModifiedAt());
-        Assertions.assertThat(postResponse.writer().id()).isEqualTo(post.getWriter().getId());
-        Assertions.assertThat(postResponse.writer().email()).isEqualTo(post.getWriter().getEmail());
-        Assertions.assertThat(postResponse.writer().nickname()).isEqualTo(post.getWriter().getNickname());
-        Assertions.assertThat(postResponse.writer().status()).isEqualTo(post.getWriter().getStatus());
-        Assertions.assertThat(postResponse.writer().lastLoginAt()).isEqualTo(post.getWriter().getLastLoginAt());
+        assertThat(postResponse.id()).isEqualTo(post.getId());
+        assertThat(postResponse.content()).isEqualTo(post.getContent());
+        assertThat(postResponse.createdAt()).isEqualTo(post.getCreatedAt());
+        assertThat(postResponse.modifiedAt()).isEqualTo(post.getModifiedAt());
+        assertThat(postResponse.writer().id()).isEqualTo(post.getWriter().getId());
+        assertThat(postResponse.writer().email()).isEqualTo(post.getWriter().getEmail());
+        assertThat(postResponse.writer().nickname()).isEqualTo(post.getWriter().getNickname());
+        assertThat(postResponse.writer().status()).isEqualTo(post.getWriter().getStatus());
+        assertThat(postResponse.writer().lastLoginAt()).isEqualTo(post.getWriter().getLastLoginAt());
     }
 }
