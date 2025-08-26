@@ -1,6 +1,7 @@
 package com.example.demo.post.service;
 
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
@@ -17,6 +18,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserServiceImpl userService;
+    private final ClockProvider clockProvider;
 
     @Transactional(readOnly = true)
     public Post getById(long id) {
@@ -26,14 +28,14 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Post create(PostCreate postCreate) {
         User user = userService.getActiveById(postCreate.getWriterId());
-        Post post = Post.from(postCreate, user);
+        Post post = Post.from(postCreate, user, clockProvider.nowMillis());
         return postRepository.save(post);
     }
 
     @Transactional
     public Post update(long id, PostUpdate postUpdate) {
         Post post = getById(id);
-        post.update(postUpdate);
+        post.update(postUpdate, clockProvider.nowMillis());
         return postRepository.save(post);
     }
 }

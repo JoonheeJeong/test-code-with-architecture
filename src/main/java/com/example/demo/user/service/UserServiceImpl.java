@@ -1,6 +1,7 @@
 package com.example.demo.user.service;
 
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CertificationService certificationService;
+    private final ClockProvider clockProvider;
 
     @Transactional(readOnly = true)
     public User getById(long id) {
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void login(long id) {
         User user = getById(id);
-        user.login();
+        user.login(clockProvider.nowMillis());
         userRepository.save(user);
     }
 

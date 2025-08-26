@@ -1,6 +1,8 @@
 package com.example.demo.user.domain;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
+import com.example.demo.common.infrastructure.SystemClockProvider;
+import com.example.demo.common.service.port.ClockProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserTest {
+
+    private ClockProvider clockProvider = new SystemClockProvider();
 
     @DisplayName("User 를 생성하면 PENDING 상태이고, certificationCode 가 생성된다")
     @Test
@@ -80,10 +84,11 @@ class UserTest {
                 .build();
 
         // when
-        user.login();
+        long now = clockProvider.nowMillis();
+        user.login(now);
 
         // then
-        assertThat(user.getLastLoginAt()).isGreaterThan(9L); // TODO: 정확한 값 비교
+        assertThat(user.getLastLoginAt()).isEqualTo(now);
     }
 
     @DisplayName("verify 성공하면 ACTIVE 상태로 변경된다")

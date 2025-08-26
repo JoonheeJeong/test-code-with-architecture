@@ -4,8 +4,6 @@ import com.example.demo.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.Clock;
-
 @Getter
 public class Post {
     private final Long id;
@@ -23,17 +21,17 @@ public class Post {
         this.writer = writer;
     }
 
-    public static Post from(PostCreate postCreate, User user) {
+    public static Post from(PostCreate postCreate, User user, long createdAt) {
         return builder()
                 .writer(user)
                 .content(postCreate.getContent())
-                .createdAt(Clock.systemUTC().millis())
+                .createdAt(createdAt)
                 .build();
     }
 
-    public void update(PostUpdate postUpdate) {
+    public void update(PostUpdate postUpdate, long modifiedAt) {
         this.content = postUpdate.getContent();
-        this.modifiedAt = Clock.systemUTC().millis();
+        this.modifiedAt = modifiedAt;
     }
 
 }

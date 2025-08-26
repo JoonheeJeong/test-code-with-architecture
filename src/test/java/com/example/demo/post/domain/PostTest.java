@@ -1,5 +1,7 @@
 package com.example.demo.post.domain;
 
+import com.example.demo.common.infrastructure.SystemClockProvider;
+import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +12,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PostTest {
+
+    private ClockProvider clockProvider = new SystemClockProvider();
 
     @DisplayName("Post 를 생성할 수 있다")
     @Test
@@ -31,12 +35,14 @@ class PostTest {
                 .build();
 
         // when
-        Post post = Post.from(createDto, user);
+        long now = clockProvider.nowMillis();
+        Post post = Post.from(createDto, user, now);
 
         // then
         assertThat(post).isNotNull();
         assertThat(post.getId()).isNull();
         assertThat(post.getContent()).isEqualTo("content");
+        assertThat(post.getCreatedAt()).isEqualTo(now);
         assertThat(post.getWriter().getId()).isEqualTo(user.getId());
     }
 
@@ -66,14 +72,17 @@ class PostTest {
                 .content("수정된 내용")
                 .build();
 
+        long now = clockProvider.nowMillis();
+
         // when
-        post.update(updateDto);
+        post.update(updateDto, now);
 
         // then
         assertThat(post).isNotNull();
         assertThat(post.getId()).isEqualTo(1L);
         assertThat(post.getContent()).isEqualTo(updateDto.getContent());
         assertThat(post.getWriter().getId()).isEqualTo(user.getId());
+        assertThat(post.getModifiedAt()).isEqualTo(now);
     }
 
 }

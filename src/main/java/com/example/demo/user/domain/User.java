@@ -4,7 +4,6 @@ import com.example.demo.common.domain.exception.CertificationCodeNotMatchedExcep
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.Clock;
 import java.util.UUID;
 
 @Getter
@@ -44,8 +43,8 @@ public class User {
         this.address = userUpdate.getAddress();
     }
 
-    public void login() {
-        this.lastLoginAt = Clock.systemUTC().millis();
+    public void login(long lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
     public void verify(String certificationCode) {
