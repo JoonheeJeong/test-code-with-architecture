@@ -1,11 +1,13 @@
 package com.example.demo.user.service;
 
-import com.example.demo.user.infrastructure.FakeMailSender;
+import com.example.demo.mock.FakeMailSender;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class CertificationServiceTest {
 
     @DisplayName("인증 메일을 보낼 수 있다")

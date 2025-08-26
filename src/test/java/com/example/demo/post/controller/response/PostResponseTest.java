@@ -4,12 +4,14 @@ import com.example.demo.post.domain.Post;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class PostResponseTest {
 
     @DisplayName("PostResponse 를 생성할 수 있다")

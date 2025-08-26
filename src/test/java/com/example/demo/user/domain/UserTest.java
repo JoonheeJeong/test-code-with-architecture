@@ -6,11 +6,13 @@ import com.example.demo.common.infrastructure.SystemUUIDProvider;
 import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.common.service.port.UUIDProvider;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class UserTest {
 
     private ClockProvider clockProvider = new SystemClockProvider();

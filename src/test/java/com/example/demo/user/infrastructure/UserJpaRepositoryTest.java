@@ -3,6 +3,7 @@ package com.example.demo.user.infrastructure;
 import com.example.demo.user.domain.UserStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("slow")
 @DataJpaTest
 @SqlGroup({
         @Sql(value = "classpath:sql/test-user-init.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),

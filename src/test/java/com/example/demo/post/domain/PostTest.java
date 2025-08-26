@@ -5,12 +5,14 @@ import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class PostTest {
 
     private ClockProvider clockProvider = new SystemClockProvider();

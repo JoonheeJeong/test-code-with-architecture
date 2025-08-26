@@ -4,10 +4,12 @@ import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+@Tag("fast")
 class MyProfileResponseTest {
 
     @DisplayName("MyProfileResponse 를 생성할 수 있다")
