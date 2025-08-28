@@ -7,7 +7,7 @@ import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.post.service.port.PostRepository;
 import com.example.demo.user.domain.User;
-import com.example.demo.user.service.UserServiceImpl;
+import com.example.demo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final ClockProvider clockProvider;
 
     @Transactional(readOnly = true)

@@ -16,34 +16,34 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final CertificationService certificationService;
+    private final UserRepository userRepo;
+    private final CertificationService certService;
     private final ClockProvider clockProvider;
     private final UUIDProvider uuidProvider;
 
     @Transactional(readOnly = true)
     public User getById(long id) {
-        return userRepository.findById(id)
+        return userRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
     @Transactional(readOnly = true)
     public User getActiveByEmail(String email) {
-        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+        return userRepo.findByEmailAndStatus(email, UserStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
     @Transactional(readOnly = true)
     public User getActiveById(long id) {
-        return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+        return userRepo.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
     @Transactional
     public User create(UserCreate userCreate) {
         User user = User.from(userCreate, uuidProvider.random());
-        user = userRepository.save(user);
-        certificationService.send(user.getId(), user.getCertificationCode(), user.getEmail());
+        user = userRepo.save(user);
+        certService.send(user.getId(), user.getCertificationCode(), user.getEmail());
         return user;
     }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public User update(long id, UserUpdate userUpdate) {
         User user = getActiveById(id);
         user.update(userUpdate);
-        user = userRepository.save(user);
+        user = userRepo.save(user);
         return user;
     }
 
@@ -59,14 +59,14 @@ public class UserServiceImpl implements UserService {
     public void login(long id) {
         User user = getById(id);
         user.login(clockProvider.nowMillis());
-        userRepository.save(user);
+        userRepo.save(user);
     }
 
     @Transactional
     public void verifyEmail(long id, String certificationCode) {
         User user = getById(id);
         user.verify(certificationCode);
-        userRepository.save(user);
+        userRepo.save(user);
     }
 
 }
