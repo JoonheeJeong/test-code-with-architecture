@@ -23,8 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public User getById(long id) {
-        return userRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        return userRepo.getById(id);
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void login(long id) {
-        User user = getById(id);
+        User user = getActiveById(id);
         user.login(clockProvider.nowMillis());
         userRepo.save(user);
     }

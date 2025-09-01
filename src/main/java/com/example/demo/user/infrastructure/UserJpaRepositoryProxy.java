@@ -1,5 +1,6 @@
 package com.example.demo.user.infrastructure;
 
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.service.port.UserRepository;
@@ -34,5 +35,11 @@ public class UserJpaRepositoryProxy implements UserRepository {
     @Override
     public Optional<User> findByIdAndStatus(long id, UserStatus userStatus) {
         return jpaRepo.findByIdAndStatus(id, userStatus).map(UserEntity::toModel);
+    }
+
+    @Override
+    public User getActiveById(long id) {
+        return findByIdAndStatus(id, UserStatus.ACTIVE)
+                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 }

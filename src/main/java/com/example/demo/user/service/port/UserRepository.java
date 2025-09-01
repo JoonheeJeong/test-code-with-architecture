@@ -1,5 +1,6 @@
 package com.example.demo.user.service.port;
 
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 
@@ -13,4 +14,11 @@ public interface UserRepository {
     Optional<User> findByEmailAndStatus(String email, UserStatus userStatus);
 
     Optional<User> findByIdAndStatus(long id, UserStatus userStatus);
+
+    User getActiveById(long id);
+
+    default User getById(long id) {
+        return findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("users", id));
+    }
 }

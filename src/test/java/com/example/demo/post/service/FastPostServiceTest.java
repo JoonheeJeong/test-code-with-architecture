@@ -2,10 +2,7 @@ package com.example.demo.post.service;
 
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.common.infrastructure.SystemClockProvider;
-import com.example.demo.common.infrastructure.SystemUUIDProvider;
 import com.example.demo.common.service.port.ClockProvider;
-import com.example.demo.common.service.port.UUIDProvider;
-import com.example.demo.mock.FakeMailSender;
 import com.example.demo.mock.PostFakeRepository;
 import com.example.demo.mock.UserFakeRepository;
 import com.example.demo.post.domain.Post;
@@ -13,10 +10,6 @@ import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import com.example.demo.user.service.CertificationServiceImpl;
-import com.example.demo.user.service.UserService;
-import com.example.demo.user.service.UserServiceImpl;
-import com.example.demo.user.service.port.MailSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -28,20 +21,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Tag("fast")
 class FastPostServiceTest {
 
-    private PostFakeRepository postRepo;
     private UserFakeRepository userRepo;
     private PostService postService;
 
     @BeforeEach
     void setUp() {
         userRepo = new UserFakeRepository();
-        postRepo = new PostFakeRepository();
-        MailSender mailSender = new FakeMailSender();
+        PostFakeRepository postRepo = new PostFakeRepository();
         ClockProvider clockProvider = new SystemClockProvider();
-        UUIDProvider uuidProvider = new SystemUUIDProvider();
-        CertificationServiceImpl certificationService = new CertificationServiceImpl(mailSender);
-        UserService userService = new UserServiceImpl(userRepo, certificationService, clockProvider, uuidProvider);
-        postService = new PostServiceImpl(postRepo, userService, clockProvider);
+        postService = new PostServiceImpl(postRepo, userRepo, clockProvider);
 
         User user1 = User.builder()
                 .id(1L)

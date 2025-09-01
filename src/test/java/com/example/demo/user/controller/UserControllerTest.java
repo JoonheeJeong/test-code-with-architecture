@@ -106,7 +106,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}/verify", userId)
                         .queryParam("certificationCode", certificationCode))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Users에서 ID %d를 찾을 수 없습니다.".formatted(userId)))
+                .andExpect(content().string("users에서 ID %d를 찾을 수 없습니다.".formatted(userId)))
         ;
     }
 

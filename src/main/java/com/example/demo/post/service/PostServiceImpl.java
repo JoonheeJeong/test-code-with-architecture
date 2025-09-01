@@ -7,7 +7,7 @@ import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.post.service.port.PostRepository;
 import com.example.demo.user.domain.User;
-import com.example.demo.user.service.UserService;
+import com.example.demo.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,26 +16,26 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-    private final PostRepository postRepository;
-    private final UserService userService;
+    private final PostRepository postRepo;
+    private final UserRepository userRepo;
     private final ClockProvider clockProvider;
 
     @Transactional(readOnly = true)
     public Post getById(long id) {
-        return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Posts", id));
+        return postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Posts", id));
     }
 
     @Transactional
     public Post create(PostCreate postCreate) {
-        User user = userService.getActiveById(postCreate.getWriterId());
+        User user = userRepo.getActiveById(postCreate.getWriterId());
         Post post = Post.from(postCreate, user, clockProvider.nowMillis());
-        return postRepository.save(post);
+        return postRepo.save(post);
     }
 
     @Transactional
     public Post update(long id, PostUpdate postUpdate) {
         Post post = getById(id);
         post.update(postUpdate, clockProvider.nowMillis());
-        return postRepository.save(post);
+        return postRepo.save(post);
     }
 }
