@@ -5,6 +5,7 @@ import com.example.demo.common.infrastructure.SystemClockProvider;
 import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.mock.PostFakeRepository;
 import com.example.demo.mock.UserFakeRepository;
+import com.example.demo.post.controller.port.PostService;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;

@@ -8,12 +8,12 @@ import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.common.service.port.UUIDProvider;
 import com.example.demo.mock.FakeMailSender;
 import com.example.demo.mock.UserFakeRepository;
+import com.example.demo.user.controller.port.UserService;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
 import com.example.demo.user.service.port.MailSender;
-import com.example.demo.user.service.port.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 
