@@ -1,13 +1,12 @@
 package com.example.demo.mock;
 
-import com.example.demo.common.infrastructure.SystemClockProvider;
 import com.example.demo.common.infrastructure.SystemUUIDProvider;
 import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.common.service.port.UUIDProvider;
 import com.example.demo.post.controller.port.PostService;
 import com.example.demo.post.service.PostServiceImpl;
 import com.example.demo.post.service.port.PostRepository;
-import com.example.demo.user.controller.port.CertificationService;
+import com.example.demo.user.service.port.CertificationService;
 import com.example.demo.user.controller.port.UserService;
 import com.example.demo.user.service.CertificationServiceImpl;
 import com.example.demo.user.service.UserServiceImpl;

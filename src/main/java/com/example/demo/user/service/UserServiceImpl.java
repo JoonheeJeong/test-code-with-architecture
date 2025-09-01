@@ -3,7 +3,7 @@ package com.example.demo.user.service;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.common.service.port.ClockProvider;
 import com.example.demo.common.service.port.UUIDProvider;
-import com.example.demo.user.controller.port.CertificationService;
+import com.example.demo.user.service.port.CertificationService;
 import com.example.demo.user.controller.port.UserService;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
