@@ -23,7 +23,7 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = true)
     public Post getById(long id) {
-        return postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Posts", id));
+        return postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("posts", "id", id));
     }
 
     @Transactional

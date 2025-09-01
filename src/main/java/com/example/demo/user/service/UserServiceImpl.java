@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User getActiveByEmail(String email) {
         return userRepo.findByEmailAndStatus(email, UserStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", email));
+                .orElseThrow(() -> new ResourceNotFoundException("users", "email,status", email + ",ACTIVE"));
     }
 
     @Transactional(readOnly = true)
     public User getActiveById(long id) {
         return userRepo.findByIdAndStatus(id, UserStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
+                .orElseThrow(() -> new ResourceNotFoundException("users", "id,status", id + ",ACTIVE"));
     }
 
     @Transactional

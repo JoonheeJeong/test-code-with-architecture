@@ -19,6 +19,6 @@ public interface UserRepository {
 
     default User getById(long id) {
         return findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("users", id));
+                .orElseThrow(() -> new ResourceNotFoundException("users", "id", id));
     }
 }

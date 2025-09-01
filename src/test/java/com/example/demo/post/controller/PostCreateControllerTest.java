@@ -77,6 +77,6 @@ class PostCreateControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Users에서 ID 3를 찾을 수 없습니다."));
+                .andExpect(content().string("users 에서 id 3 을(를) 찾을 수 없습니다."));
     }
 }

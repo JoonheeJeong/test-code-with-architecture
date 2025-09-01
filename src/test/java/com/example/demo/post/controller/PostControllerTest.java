@@ -64,7 +64,7 @@ class PostControllerTest {
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/{id}", id))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Posts에서 ID %d를 찾을 수 없습니다.".formatted(id)))
+                .andExpect(content().string("posts 에서 id 3 을(를) 찾을 수 없습니다."))
         ;
     }
 
@@ -108,7 +108,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Posts에서 ID %d를 찾을 수 없습니다.".formatted(postId)))
+                .andExpect(content().string("posts 에서 id 3 을(를) 찾을 수 없습니다."))
         ;
     }
 

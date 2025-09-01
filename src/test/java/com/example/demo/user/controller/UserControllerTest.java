@@ -64,7 +64,7 @@ class UserControllerTest {
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}", userId))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Users에서 ID %d를 찾을 수 없습니다.".formatted(userId)))
+                .andExpect(content().string("users 에서 id,status 3,ACTIVE 을(를) 찾을 수 없습니다."))
         ;
     }
 
@@ -106,7 +106,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}/verify", userId)
                         .queryParam("certificationCode", certificationCode))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("users에서 ID %d를 찾을 수 없습니다.".formatted(userId)))
+                .andExpect(content().string("users 에서 id 3 을(를) 찾을 수 없습니다."))
         ;
     }
 
@@ -139,7 +139,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/me")
                         .header("EMAIL", email))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Users에서 ID %s를 찾을 수 없습니다.".formatted(email)))
+                .andExpect(content().string("users 에서 email,status jeonggoo75@gmail.com,ACTIVE 을(를) 찾을 수 없습니다."))
         ;
     }
 
@@ -193,7 +193,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Users에서 ID %s를 찾을 수 없습니다.".formatted(email)))
+                .andExpect(content().string("users 에서 email,status jeonggoo75@gmail.com,ACTIVE 을(를) 찾을 수 없습니다."))
         ;
     }
 

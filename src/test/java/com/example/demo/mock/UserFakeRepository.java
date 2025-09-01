@@ -66,7 +66,7 @@ public class UserFakeRepository implements UserRepository {
     @Override
     public User getActiveById(long id) {
         return findByIdAndStatus(id, UserStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("users", id));
+                .orElseThrow(() -> new ResourceNotFoundException("users", "id", id));
     }
 
 }

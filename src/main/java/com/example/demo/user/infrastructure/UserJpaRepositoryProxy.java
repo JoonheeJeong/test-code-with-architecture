@@ -40,6 +40,6 @@ public class UserJpaRepositoryProxy implements UserRepository {
     @Override
     public User getActiveById(long id) {
         return findByIdAndStatus(id, UserStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
+                .orElseThrow(() -> new ResourceNotFoundException("users", "id", id));
     }
 }
